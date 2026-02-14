@@ -155,9 +155,9 @@ def main(skipFB=False, FBUrls=[], jsonRep=None, dockerMode=False, dockerName=Non
     console.section('Links')
     print(rev_links)
     console.section('Predictions')
-    try:
-        predictions = [x.lower() for x in predictions]
-    except:
+    if predictions:
+        predictions = [x.lower() for x in predictions if x]
+    else:
         predictions = []
     print(predictions)
     presentResult(predictions)
