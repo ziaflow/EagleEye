@@ -3,6 +3,7 @@ import os
 import sys
 import tempfile
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 
 with open('./config.json') as json_data:
     cfg = json.load(json_data)
@@ -35,14 +36,16 @@ def getWebDriver():
         p = os.path.join(tempfile.gettempdir(), 'imageraider')
         if not os.path.isdir(p):
             os.makedirs(p)
-        profile = webdriver.FirefoxProfile()
-        profile.set_preference('browser.download.folderList', 2) # custom location
-        profile.set_preference('browser.download.manager.showWhenStarting', False)
-        profile.set_preference('browser.download.dir', p)
-        profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'text/csv')
-        profile.set_preference("browser.link.open_newwindow", 3)
-        profile.set_preference("browser.link.open_newwindow.restriction", 2)
-        return webdriver.Firefox(profile)
+        
+        options = Options()
+        options.add_argument("--headless")
+        options.set_preference('browser.download.folderList', 2) # custom location
+        options.set_preference('browser.download.manager.showWhenStarting', False)
+        options.set_preference('browser.download.dir', p)
+        options.set_preference('browser.helperApps.neverAsk.saveToDisk', 'text/csv')
+        options.set_preference("browser.link.open_newwindow", 3)
+        options.set_preference("browser.link.open_newwindow.restriction", 2)
+        return webdriver.Firefox(options=options)
     else:
         os.environ["webdriver.chrome.driver"] = cfg['WEBDRIVER']['PATH']
         return webdriver.Chrome()

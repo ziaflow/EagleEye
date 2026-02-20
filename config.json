@@ -5,7 +5,7 @@
     },
     "WEBDRIVER": {
         "ENGINE": "firefox",
-        "PATH": "/usr/bin/geckodriver"
+        "PATH": "/usr/local/bin/geckodriver"
     },
     "FILTER": [
         "instagram.com",
