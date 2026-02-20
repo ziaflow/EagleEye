@@ -3,7 +3,8 @@
 pip3 install "fake-useragent<1.4.0"
 
 cd /EagleEye
-python3 eagle-eye.py --docker --name "Kristina"
+TARGET_NAME=${NAME:-"Kristina"}
+python3 eagle-eye.py --docker --name "$TARGET_NAME"
 
 #now copy the result
 yes | cp -rf /EagleEye/*.pdf /result/
