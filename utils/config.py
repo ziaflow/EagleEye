@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import tempfile
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -27,7 +26,7 @@ def jitters():
 
 def getWebDriver():
     if not os.path.isfile(cfg['WEBDRIVER']['PATH']):
-        print(f"{cfg['WEBDRIVER']['PATH']} does not exist - install a webdriver")
+        print(f"{cfg['WEBDRIVER']['PATH']} does not exist")
         sys.exit(-2)
     
     driver_type = cfg['WEBDRIVER']['ENGINE'].lower()
@@ -35,20 +34,18 @@ def getWebDriver():
     if driver_type == 'firefox':
         options = Options()
         
-        # --- ESSENTIAL DOCKER & HEADLESS FLAGS ---
+        # Essential Docker Stability Flags
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--window-size=1920,1080")
         
-        # --- ADDITIONAL FIXES FOR STATUS 1 CRASHES ---
+        # Extra 'Status 1' Killers
         options.add_argument("--disable-gpu")
         options.add_argument("--disable-software-rasterizer")
+        options.set_preference("browser.tabs.remote.autostart", False)
         
         service = Service(executable_path=cfg['WEBDRIVER']['PATH'])
         return webdriver.Firefox(service=service, options=options)
     
-    elif driver_type == 'chrome':
-        return webdriver.Chrome()
-    
-    return None
+    return webdriver.Chrome()
