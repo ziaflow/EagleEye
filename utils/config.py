@@ -33,29 +33,22 @@ def getWebDriver():
     driver_type = cfg['WEBDRIVER']['ENGINE'].lower()
     
     if driver_type == 'firefox':
-        tmp_dir = os.path.join(tempfile.gettempdir(), 'imageraider')
-        if not os.path.isdir(tmp_dir):
-            os.makedirs(tmp_dir)
-        
         options = Options()
-        # Docker-specific stability flags
+        
+        # --- ESSENTIAL DOCKER & HEADLESS FLAGS ---
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--window-size=1920,1080")
         
-        options.set_preference('browser.download.folderList', 2)
-        options.set_preference('browser.download.manager.showWhenStarting', False)
-        options.set_preference('browser.download.dir', tmp_dir)
-        options.set_preference('browser.helperApps.neverAsk.saveToDisk', 'text/csv')
-        options.set_preference("browser.link.open_newwindow", 3)
-        options.set_preference("browser.link.open_newwindow.restriction", 2)
+        # --- ADDITIONAL FIXES FOR STATUS 1 CRASHES ---
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-software-rasterizer")
         
         service = Service(executable_path=cfg['WEBDRIVER']['PATH'])
         return webdriver.Firefox(service=service, options=options)
     
     elif driver_type == 'chrome':
-        # Fallback for Chrome if ever needed
         return webdriver.Chrome()
     
     return None
